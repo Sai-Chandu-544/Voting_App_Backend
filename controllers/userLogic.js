@@ -10,7 +10,7 @@ module.exports.userRegister = async (req, res) => {
     const { name, email, password, gender, age, phoneNo, adhaarNo } = req.body;
 
     if (!name || !email || !password || !gender || !age || !phoneNo || !adhaarNo) {
-      return res.status(400).send("All fields are required");
+      return res.status(400).json({message:"All fields are required"});
     }
 
     // age = Number(age); // Convert string to number
@@ -21,12 +21,12 @@ if (age < 18) {
 
 
     if (phoneNo.length !== 10) {
-      return res.status(402).send("Phone Number must be exactly 10 digits");
+      return res.status(402).json({message:"Phone Number must be exactly 10 digits"});
     }
 
     const existingUser = await userModel.findOne({ email:email });
     if (existingUser) {
-      return res.status(403).send("User already registered!");
+      return res.status(403).json({message:"User already registered!"});
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -43,11 +43,11 @@ if (age < 18) {
     });
 
     await newUser.save();
-    res.status(200).send("User registered successfully");
+    res.status(200).json({message:"User registered successfully"});
 
   } catch (err) {
     console.error("User Registration Error", err);
-    res.status(500).send("Server Error");
+    res.status(500).json({message:"Server Error"});
   }
 };
 
