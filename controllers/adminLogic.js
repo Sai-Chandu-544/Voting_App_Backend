@@ -11,13 +11,13 @@ module.exports.adminRegister=async(req,res)=>{
          const { name, email, password } = req.body;
         
             if (!name || !email || !password) {
-              return res.status(400).send("All fields are required");
+              return res.status(400).json({message:"All fields are required"});
             }
         
         
             const existingAdmin = await adminModel.findOne({ email:email });
             if (existingAdmin) {
-              return res.status(401).send("admin already registered!");
+              return res.status(401).json({message:"admin already registered!"});
             }
         
             const salt = await bcrypt.genSalt(10);
@@ -31,7 +31,7 @@ module.exports.adminRegister=async(req,res)=>{
             });
         
             await newadmin.save();
-            res.status(200).send("admin registered successfully");
+            res.status(200).json({message:"admin registered successfully"});
 
     }catch(err){
 
@@ -119,7 +119,7 @@ module.exports.allVotes=async(req,res)=>{
 
   }catch(err){
     console.log("Internal Server Problem",err)
-    res.status(500).json({message:"Something went wrong",
+    res.status().json({message:"Something went wrong",
       error:err
     })
 
