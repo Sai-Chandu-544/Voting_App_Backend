@@ -5,9 +5,10 @@ const env=require("dotenv").config()
 const PORT=process.env.PORT
 const DB=require("./config/DB_Connection")
 const bodyParser = require("body-parser");
+const cors=require("cors")
 app.use(bodyParser.json())
 
-
+app.use(cors())
 
 const userRouter=require("./routes/userRouter")
 const adminRouter=require("./routes/adminRouter")
