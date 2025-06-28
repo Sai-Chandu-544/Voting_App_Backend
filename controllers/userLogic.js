@@ -16,17 +16,17 @@ module.exports.userRegister = async (req, res) => {
     // age = Number(age); // Convert string to number
     
 if (age < 18) {
-  return res.status(400).json({ message: "Age must be 18 or greater" });
+  return res.status(401).json({ message: "Age must be 18 or greater" });
 }
 
 
     if (phoneNo.length !== 10) {
-      return res.status(401).send("Phone Number must be exactly 10 digits");
+      return res.status(402).send("Phone Number must be exactly 10 digits");
     }
 
     const existingUser = await userModel.findOne({ email:email });
     if (existingUser) {
-      return res.status(402).send("User already registered!");
+      return res.status(403).send("User already registered!");
     }
 
     const salt = await bcrypt.genSalt(10);
