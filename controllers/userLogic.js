@@ -10,23 +10,23 @@ module.exports.userRegister = async (req, res) => {
     const { name, email, password, gender, age, phoneNo, adhaarNo } = req.body;
 
     if (!name || !email || !password || !gender || !age || !phoneNo || !adhaarNo) {
-      return res.status(400).json({message:"All fields are required"});
+      return res.status(401).json({message:"All fields are required"});
     }
 
     // age = Number(age); // Convert string to number
     
 if (age < 18) {
-  return res.status(401).json({ message: "Age must be 18 or greater" });
+  return res.status(402).json({ message: "Age must be 18 or greater" });
 }
 
 
     if (phoneNo.length !== 10) {
-      return res.status(402).json({message:"Phone Number must be exactly 10 digits"});
+      return res.status(403).json({message:"Phone Number must be exactly 10 digits"});
     }
 
     const existingUser = await userModel.findOne({ email:email });
     if (existingUser) {
-      return res.status(403).json({message:"User already registered!"});
+      return res.status(404).json({message:"User already registered!"});
     }
 
     const salt = await bcrypt.genSalt(10);
