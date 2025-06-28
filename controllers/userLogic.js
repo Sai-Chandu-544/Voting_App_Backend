@@ -21,12 +21,12 @@ if (age < 18) {
 
 
     if (phoneNo.length !== 10) {
-      return res.status(400).send("Phone Number must be exactly 10 digits");
+      return res.status(401).send("Phone Number must be exactly 10 digits");
     }
 
     const existingUser = await userModel.findOne({ email:email });
     if (existingUser) {
-      return res.status(400).send("User already registered!");
+      return res.status(402).send("User already registered!");
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -55,15 +55,15 @@ module.exports.userLogin=async (req,res)=>{
     try{
         const {name,email,password}=req.body;
         if(!name ||!email || !password ){
-            return res.json({message:"Feild is Required"})
+            return res.status(400).json({message:"Feild is Required"})
         }
         
         const user=await userModel.findOne({email:email})
         if(!user){
-            return res.json({message:"Please Register!"})
+            return res.status(401).json({message:"Please Register!"})
         }
         if(name!==user.name){
-            return res.json({message:"name is Incorrect"})
+            return res.status(402).json({message:"name is Incorrect"})
 
         }
        const result= await bcrypt.compare(password,user.password)
@@ -123,7 +123,7 @@ try {
   // Check if user already voted
   const alreadyVoted = await votesModel.findOne({ user: userId });
   if (alreadyVoted) {
-    return res.status(400).json({ message: "You have already voted" });
+    return res.status(401).json({ message: "You have already voted" });
   }
 
   // Get candidate

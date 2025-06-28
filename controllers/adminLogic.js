@@ -17,7 +17,7 @@ module.exports.adminRegister=async(req,res)=>{
         
             const existingAdmin = await adminModel.findOne({ email:email });
             if (existingAdmin) {
-              return res.status(400).send("admin already registered!");
+              return res.status(401).send("admin already registered!");
             }
         
             const salt = await bcrypt.genSalt(10);
@@ -42,15 +42,15 @@ module.exports.adminLogin=async (req,res)=>{
     try{
         const {name,email,password}=req.body;
         if(!name ||!email || !password ){
-            return res.json({message:"Feild is Required"})
+            return res.status(400).json({message:"Feild is Required"})
         }
         
         const admin=await adminModel.findOne({email:email})
         if(!admin){
-            return res.json({message:"Please Register!"})
+            return res.status(401).json({message:"Please Register!"})
         }
         if(name!==admin.name){
-            return res.json({message:"name is Incorrect"})
+            return res.status(402).json({message:"name is Incorrect"})
 
         }
        const result= await bcrypt.compare(password,admin.password)
@@ -69,14 +69,14 @@ module.exports.adminLogin=async (req,res)=>{
 
       }
       else{
-        res.json({message:"something went wrong!"})
+        res.status(500).json({message:"something went wrong!"})
       }
           
           
 
     }catch(err){
          console.log("something went wrong",err)
-        res.json({
+        res.status(502).json({
             message: "Something went wrong",
             error: err
           });
@@ -119,7 +119,7 @@ module.exports.allVotes=async(req,res)=>{
 
   }catch(err){
     console.log("Internal Server Problem",err)
-    res.json({message:"Something went wrong",
+    res.status(500).json({message:"Something went wrong",
       error:err
     })
 
