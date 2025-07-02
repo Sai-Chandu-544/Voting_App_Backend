@@ -113,13 +113,14 @@ if (partyExists) {
 }
 module.exports.allVotes=async(req,res)=>{
   try{
-    const allVotes= await votesModel.find().select("-user") // this excludes the 'user' field
+    const allVotes= await votesModel.findOne().select("-user") // this excludes the 'user' field
     .populate("candidate", "name party votesLength");
-    res.status(200).json(allVotes)
+    res.status(200).json(allVotes);
+
 
   }catch(err){
     console.log("Internal Server Problem",err)
-    res.status().json({message:"Something went wrong",
+    res.status(500).json({message:"Something went wrong",
       error:err
     })
 
