@@ -115,7 +115,26 @@ module.exports.allVotes=async(req,res)=>{
   try{
     const allVotes= await votesModel.find().select("-user") // this excludes the 'user' field
     .populate("candidate", "name party votesLength");
-    res.status(200).json(allVotes);
+
+    const parties = [];
+
+const uniquePartyVotes = allVotes.filter(vote => {
+
+ 
+  if (vote.candidate && vote.candidate.party) {
+    const party = vote.candidate.party;
+
+    
+    if (!parties.includes(party)) {
+      parties.push(party);
+      return true;
+    }
+  }
+
+  return false; 
+});
+
+    res.status(200).json(uniquePartyVotes);
  
 
 
